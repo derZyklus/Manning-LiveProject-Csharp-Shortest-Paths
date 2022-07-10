@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using Accessibility;
 
 namespace ShortestPaths;
@@ -11,6 +12,11 @@ internal class Network
     internal Network()
     {
         Clear();
+    }
+
+    internal Network(string filename)
+    {
+        ReadFromFile(filename);
     }
 
     internal List<Node> Nodes { get; private set; }
@@ -111,5 +117,46 @@ internal class Network
     {
         var fileContent = File.ReadAllText(filename);
         Deserialize(fileContent);
+    }
+
+    private const double Margin = 10;
+
+    internal void Draw(Canvas canvas)
+    {
+        
+        var bounds = GetBounds();
+        canvas.Width = bounds.Width+Margin;
+        canvas.Height = bounds.Height+Margin;
+
+        foreach (var link in Links)
+        {
+            link.Draw(canvas);
+        }
+
+        foreach (var link in Links)
+        {
+            link.DrawLabel(canvas);
+        }
+
+        foreach (var node in Nodes)
+        {
+            // Draw the nodes
+        }
+    }
+
+    internal Rect GetBounds()
+    {
+        double xmax = 0;
+        double ymax = 0;
+
+        foreach (var node in Nodes)
+        {
+            if(node.Center.X>xmax)
+                xmax = node.Center.X;
+            if(node.Center.Y>ymax)
+                ymax = node.Center.Y;
+        }
+
+        return new Rect(new Size(xmax, ymax));
     }
 }

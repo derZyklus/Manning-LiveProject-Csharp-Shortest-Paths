@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace ShortestPaths;
 
@@ -27,5 +29,16 @@ public class Network
     public void AddLink(Link link)
     {
         Links.Add(link);
+    }
+
+    public string Serialization()
+    {
+        string result = string.Empty;
+
+        StringWriter sw = new StringWriter();
+        
+
+
+        return sw.ToString();
     }
 }

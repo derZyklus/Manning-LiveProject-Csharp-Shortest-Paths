@@ -7,6 +7,30 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Width" Value="70"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="Margin" Value="3"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+            </Style>
+        </Grid.Resources>
+        <StackPanel Grid.Row="0">
+            <Button x:Name="Button1" Content="Network 1" Click="Button1_OnClick"/>
+            <Button x:Name="Button2" Content="Network 2" Click="Button2_OnClick"/>
+            <Button x:Name="Button3" Content="Network 3" Click="Button3_OnClick"/>
+        </StackPanel>
+        <TextBox Grid.Row="1" x:Name="netTextBox" VerticalScrollBarVisibility="Auto"/>
+        <Label Grid.Row="2" x:Name="statusLabel" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

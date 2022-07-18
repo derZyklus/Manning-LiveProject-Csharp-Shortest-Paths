@@ -3,12 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Accessibility;
 
 namespace ShortestPaths;
 
 internal class Network
 {
+    #region Properties
+
+    internal List<Link> Links { get; private set; }
+
+    internal List<Node> Nodes { get; private set; }
+
+    #endregion
+
+    private const double Margin = 10;
+
     internal Network()
     {
         Clear();
@@ -18,9 +27,6 @@ internal class Network
     {
         ReadFromFile(filename);
     }
-
-    internal List<Node> Nodes { get; private set; }
-    internal List<Link> Links { get; private set; }
 
     internal void Clear()
     {
@@ -46,16 +52,10 @@ internal class Network
         sw.WriteLine($"{Links.Count} # Num links.");
 
         sw.WriteLine("# Nodes.");
-        foreach (var node in Nodes)
-        {
-            sw.WriteLine($"{node.Center.X},{node.Center.Y},{node.Text}");
-        }
+        foreach (var node in Nodes) sw.WriteLine($"{node.Center.X},{node.Center.Y},{node.Text}");
 
         sw.WriteLine("# Links.");
-        foreach (var link in Links)
-        {
-            sw.WriteLine($"{link.FromNode.Index},{link.ToNode.Index},{link.Cost}");
-        }
+        foreach (var link in Links) sw.WriteLine($"{link.FromNode.Index},{link.ToNode.Index},{link.Cost}");
 
         return sw.ToString();
     }
@@ -75,7 +75,7 @@ internal class Network
                 return null;
 
             var cleanLine = fullLine.Split('#', StringSplitOptions.TrimEntries)[0];
-            if(cleanLine.Length > 0)
+            if (cleanLine.Length > 0)
                 return cleanLine;
         }
     }
@@ -84,7 +84,7 @@ internal class Network
     {
         Clear();
 
-        using StringReader stringReader = new StringReader(networkToLoad);
+        using var stringReader = new StringReader(networkToLoad);
         var numberOfNodes = int.Parse(ReadNextLine(stringReader));
         var numberOfLinks = int.Parse(ReadNextLine(stringReader));
 
@@ -119,29 +119,17 @@ internal class Network
         Deserialize(fileContent);
     }
 
-    private const double Margin = 10;
-
     internal void Draw(Canvas canvas)
     {
-        
         var bounds = GetBounds();
-        canvas.Width = bounds.Width+Margin;
-        canvas.Height = bounds.Height+Margin;
+        canvas.Width = bounds.Width + Margin;
+        canvas.Height = bounds.Height + Margin;
 
-        foreach (var link in Links)
-        {
-            link.Draw(canvas);
-        }
+        foreach (var link in Links) link.Draw(canvas);
 
-        foreach (var link in Links)
-        {
-            link.DrawLabel(canvas);
-        }
+        foreach (var link in Links) link.DrawLabel(canvas);
 
-        foreach (var node in Nodes)
-        {
-            // Draw the nodes
-        }
+        foreach (var node in Nodes) node.Draw(canvas);
     }
 
     internal Rect GetBounds()
@@ -151,9 +139,9 @@ internal class Network
 
         foreach (var node in Nodes)
         {
-            if(node.Center.X>xmax)
+            if (node.Center.X > xmax)
                 xmax = node.Center.X;
-            if(node.Center.Y>ymax)
+            if (node.Center.Y > ymax)
                 ymax = node.Center.Y;
         }
 

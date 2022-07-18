@@ -37,7 +37,7 @@ internal class Link
 
     internal void Draw(Canvas canvas)
     {
-        canvas.DrawLine(FromNode.Center, ToNode.Center, Brushes.Crimson, 1);
+        canvas.DrawLine(FromNode.Center, ToNode.Center, Brushes.Green, 1);
     }
 
     internal void DrawLabel(Canvas canvas)
@@ -45,7 +45,7 @@ internal class Link
         var dx = ToNode.Center.X - FromNode.Center.X;
         var dy = ToNode.Center.Y - FromNode.Center.Y;
 
-        var angle = Math.Atan2(dx, dy) * 180 / Math.PI - 0;
+        var angle = Math.Atan2(dx, dy) * 180 / Math.PI - 90;
 
         var x = 0.67 * FromNode.Center.X + 0.33 * ToNode.Center.X;
         var y = 0.67 * FromNode.Center.Y + 0.33 * ToNode.Center.Y;

@@ -16,6 +16,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
+                <MenuItem x:Name="MenuItemMakeTestNetworks" Click="OnClickMakeTestNetworks" Header="_Make Test Networks"/>
                 <MenuItem Command="Open" />
                 <Separator />
                 <MenuItem Click="MenuItem_OnClick" Header="_Exit" />

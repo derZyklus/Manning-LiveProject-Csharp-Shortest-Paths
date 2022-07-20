@@ -8,19 +8,11 @@ namespace ShortestPaths;
 
 internal class Node
 {
-    #region Properties
+    private const double LARGE_RADIUS = 10;
 
-    internal Point Center { get; }
-
-    internal int Index { get; set; }
-    internal List<Link> Links { get; }
-    internal Network Network { get; }
-    internal string Text { get; }
-
-    #endregion
-
-    private const double Radius = 10;
-    private const double Diameter = 2 * Radius;
+    private const double SMALL_RADIUS = 3;
+    //private const double Radius = 10;
+    //private const double Diameter = 2 * Radius;
 
     internal Node(Network network, Point center, string text)
     {
@@ -46,12 +38,24 @@ internal class Node
             Links.Add(link);
     }
 
-    internal void Draw(Canvas canvas)
+    internal void Draw(Canvas canvas, bool drawLabels)
     {
-        var bounds = new Rect(new Point(Center.X - Radius, Center.Y - Radius),
-            new Size(Diameter, Diameter));
+        var radius = drawLabels ? LARGE_RADIUS : SMALL_RADIUS;
+        var bounds = new Rect(new Point(Center.X - radius, Center.Y - radius),
+            new Size(radius * 2, radius * 2));
 
         canvas.DrawEllipse(bounds, Brushes.White, Brushes.Black, 1);
-        canvas.DrawString(Text, Diameter, Diameter, Center, 0, 12, Brushes.Blue);
+        if (drawLabels) canvas.DrawString(Text, radius * 2, radius * 2, Center, 0, 12, Brushes.Blue);
     }
+
+    #region Properties
+
+    internal Point Center { get; }
+
+    internal int Index { get; set; }
+    internal List<Link> Links { get; }
+    internal Network Network { get; }
+    internal string Text { get; }
+
+    #endregion
 }

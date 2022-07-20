@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Input.Manipulations;
 using Microsoft.Win32;
 
 namespace ShortestPaths;
@@ -11,6 +10,8 @@ namespace ShortestPaths;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private readonly Random Rand = new();
+
     #region Properties
 
     private Network MyNetwork = new();
@@ -82,30 +83,24 @@ public partial class MainWindow : Window
             nodes[rowIndex, columnIndex] = new Node(network, new Point(cx, cy), label);
         }
 
-        for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
-        {
-            for (int columnIndex = 0; columnIndex < numCols-1; columnIndex++)
-            {
-                MakeRandomizedLink(network, nodes[rowIndex, columnIndex], nodes[rowIndex, columnIndex+1]);
-            }
-        }
+        for (var rowIndex = 0; rowIndex < numRows; rowIndex++)
+        for (var columnIndex = 0; columnIndex < numCols - 1; columnIndex++)
+            MakeRandomizedLink(network, nodes[rowIndex, columnIndex], nodes[rowIndex, columnIndex + 1]);
 
-        for (int rowIndex = 0; rowIndex < numRows-1; rowIndex++)
-        {
-            for (int columnIndex = 0; columnIndex < numCols; columnIndex++)
-            {
-                MakeRandomizedLink(network, nodes[rowIndex, columnIndex], nodes[rowIndex+1, columnIndex]);
-            }
-        }
+        for (var rowIndex = 0; rowIndex < numRows - 1; rowIndex++)
+        for (var columnIndex = 0; columnIndex < numCols; columnIndex++)
+            MakeRandomizedLink(network, nodes[rowIndex, columnIndex], nodes[rowIndex + 1, columnIndex]);
+
+        network.SaveIntoFile(filename);
 
         return network;
     }
 
     private void OnClickMakeTestNetworks(object sender, RoutedEventArgs e)
     {
-        var test = BuildGridNetwork("hallo.net", 800, 600, 6, 10);
+        var testNetwork = BuildGridNetwork("network_6x10.net", 600, 400, 6, 10);
 
-        test.Draw(MainCanvas);
+        testNetwork.Draw(MainCanvas);
     }
 
     private double Distance(Point p1, Point p2)
@@ -114,16 +109,14 @@ public partial class MainWindow : Window
         return vector.Length;
     }
 
-    private readonly Random Rand = new Random();
-
-    void MakeRandomizedLink(Network network, Node node1, Node node2)
+    private void MakeRandomizedLink(Network network, Node node1, Node node2)
     {
-        double dist = Distance(node1.Center, node2.Center);
+        var dist = Distance(node1.Center, node2.Center);
 
-        double cost12 = Math.Round(dist * (Rand.Next(10, 12)/10));
-        Link link12 = new Link(network, node1, node2, cost12);
+        var cost12 = Math.Round(dist * (Rand.Next(100, 120) * 0.01));
+        var link12 = new Link(network, node1, node2, cost12);
 
-        double cost21 = Math.Round(dist * (Rand.Next(10, 12) / 10));
-        Link link21 = new Link(network, node2, node1, cost21);
+        var cost21 = Math.Round(dist * (Rand.Next(100, 120) * 0.01));
+        var link21 = new Link(network, node2, node1, cost21);
     }
 }

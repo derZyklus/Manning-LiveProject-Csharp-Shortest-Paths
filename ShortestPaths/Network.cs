@@ -34,8 +34,11 @@ internal class Network
         Links = new List<Link>();
     }
 
+    private bool drawLabels;
+
     internal void AddNode(Node node)
     {
+        drawLabels = Nodes.Count < 100 ? true : false;
         node.Index = Nodes.Count;
         Nodes.Add(node);
     }
@@ -127,9 +130,13 @@ internal class Network
 
         foreach (var link in Links) link.Draw(canvas);
 
-        foreach (var link in Links) link.DrawLabel(canvas);
+        if (drawLabels)
+        {
+            foreach (var link in Links) link.DrawLabel(canvas);
+        }
+        
 
-        foreach (var node in Nodes) node.Draw(canvas);
+        foreach (var node in Nodes) node.Draw(canvas, drawLabels);
     }
 
     internal Rect GetBounds()

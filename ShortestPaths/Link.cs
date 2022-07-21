@@ -2,22 +2,17 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace ShortestPaths;
 
 internal class Link
 {
-    #region Properties
-
-    internal double Cost { get; }
-    internal Node FromNode { get; }
-    internal Network Network { get; }
-    internal Node ToNode { get; }
-
-    #endregion
-
     private const double Radius = 10;
     private const double Diameter = 2 * Radius;
+
+    private bool isInPath;
+    private bool isInTree;
 
     internal Link(Network network, Node fromNode, Node toNode, double cost)
     {
@@ -26,8 +21,33 @@ internal class Link
         ToNode = toNode ?? throw new ArgumentNullException(nameof(toNode));
         Cost = cost;
 
+        IsInTree = false;
+        IsInPath = false;
+
         Network.AddLink(this);
         FromNode.AddLink(this);
+    }
+
+    internal Line MyLine { get; private set; }
+
+    internal bool IsInTree
+    {
+        get => isInTree;
+         set
+        {
+            isInTree = value;
+            SetLinkAppearance();
+        }
+    }
+
+    internal bool IsInPath
+    {
+        get => isInPath;
+         set
+        {
+            isInPath = value;
+            SetLinkAppearance();
+        }
     }
 
     public override string ToString()
@@ -37,7 +57,8 @@ internal class Link
 
     internal void Draw(Canvas canvas)
     {
-        canvas.DrawLine(FromNode.Center, ToNode.Center, Brushes.Green, 1);
+        //canvas.DrawLine(FromNode.Center, ToNode.Center, Brushes.Green, 1);
+        MyLine = canvas.DrawLine(FromNode.Center, ToNode.Center, Brushes.Green, 1);
     }
 
     internal void DrawLabel(Canvas canvas)
@@ -54,4 +75,34 @@ internal class Link
             Brushes.White, null, 0);
         canvas.DrawString(Cost.ToString(), Diameter, Diameter, new Point(x, y), angle, 12, Brushes.Black);
     }
+
+    private void SetLinkAppearance()
+    {
+        if (MyLine == null) return;
+
+        if (IsInPath)
+        {
+            MyLine.Stroke = Brushes.Red;
+            MyLine.StrokeThickness = 6;
+        }
+        else if (IsInTree)
+        {
+            MyLine.Stroke = Brushes.Lime;
+            MyLine.StrokeThickness = 6;
+        }
+        else
+        {
+            MyLine.Stroke = Brushes.Black;
+            MyLine.StrokeThickness = 1;
+        }
+    }
+
+    #region Properties
+
+    internal double Cost { get; }
+    internal Node FromNode { get; }
+    internal Network Network { get; }
+    internal Node ToNode { get; }
+
+    #endregion
 }

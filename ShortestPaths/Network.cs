@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace ShortestPaths;
 
@@ -15,6 +17,9 @@ internal class Network
     internal List<Node> Nodes { get; private set; }
 
     #endregion
+
+    internal Node StartNode { get; private set; }
+    internal Node EndNode { get; private set; }
 
     private const double Margin = 10;
 
@@ -153,5 +158,68 @@ internal class Network
         }
 
         return new Rect(new Size(xmax, ymax));
+    }
+
+    internal void Label_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not Label label) return;
+        if (label.Tag is Node node)
+        {
+            NodeClicked(node, e);
+        }
+    }
+
+    internal void Ellipse_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not Ellipse ellipse) return;
+        if (ellipse.Tag is Node node)
+        {
+            NodeClicked(node, e);
+        }
+    }
+
+    private void NodeClicked(Node node, MouseButtonEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            if (StartNode != null)
+            {
+                // Unset old start node
+                StartNode.IsStartNode = false;
+                foreach (var startNodeLink in StartNode.Links)
+                {
+                    startNodeLink.IsInTree = false;
+                }
+            }
+
+            // Set new start node
+            StartNode = node;
+            StartNode.IsStartNode = true;
+            foreach (var startNodeLink in StartNode.Links)
+            {
+                startNodeLink.IsInTree = true;
+            }
+        }
+
+        if (e.RightButton == MouseButtonState.Pressed)
+        {
+            if (EndNode != null)
+            {
+                // Unset old end node
+                EndNode.IsEndNode = false;
+                foreach (var endNodeLink in EndNode.Links)
+                {
+                    endNodeLink.IsInPath = false;
+                }
+            }
+
+            // Set new end node
+            EndNode = node;
+            EndNode.IsEndNode = true;
+            foreach (var endNodeLink in EndNode.Links)
+            {
+                endNodeLink.IsInPath = true;
+            }
+        }
     }
 }

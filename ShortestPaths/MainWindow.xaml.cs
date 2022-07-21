@@ -98,7 +98,7 @@ public partial class MainWindow : Window
 
     private void OnClickMakeTestNetworks(object sender, RoutedEventArgs e)
     {
-        var testNetwork = BuildGridNetwork("network_6x10.net", 600, 400, 4, 4);
+        var testNetwork = BuildGridNetwork("network_6x10.net", 600, 400, 10, 15);
 
         testNetwork.Draw(MainCanvas);
     }

@@ -10,18 +10,11 @@ namespace ShortestPaths;
 
 internal class Network
 {
-    #region Properties
-
-    internal List<Link> Links { get; private set; }
-
-    internal List<Node> Nodes { get; private set; }
-
-    #endregion
-
-    internal Node StartNode { get; private set; }
-    internal Node EndNode { get; private set; }
-
     private const double Margin = 10;
+
+    private AlgorithmTypes algorithmType;
+
+    private bool drawLabels;
 
     internal Network()
     {
@@ -33,13 +26,24 @@ internal class Network
         ReadFromFile(filename);
     }
 
+    internal AlgorithmTypes AlgorithmType
+    {
+        get => algorithmType;
+        set
+        {
+            algorithmType = value;
+            CheckForPath();
+        }
+    }
+
+    internal Node StartNode { get; private set; }
+    internal Node EndNode { get; private set; }
+
     internal void Clear()
     {
         Nodes = new List<Node>();
         Links = new List<Link>();
     }
-
-    private bool drawLabels;
 
     internal void AddNode(Node node)
     {
@@ -136,10 +140,9 @@ internal class Network
         foreach (var link in Links) link.Draw(canvas);
 
         if (drawLabels)
-        {
-            foreach (var link in Links) link.DrawLabel(canvas);
-        }
-        
+            foreach (var link in Links)
+                link.DrawLabel(canvas);
+
 
         foreach (var node in Nodes) node.Draw(canvas, drawLabels);
     }
@@ -163,19 +166,13 @@ internal class Network
     internal void Label_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is not Label label) return;
-        if (label.Tag is Node node)
-        {
-            NodeClicked(node, e);
-        }
+        if (label.Tag is Node node) NodeClicked(node, e);
     }
 
     internal void Ellipse_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is not Ellipse ellipse) return;
-        if (ellipse.Tag is Node node)
-        {
-            NodeClicked(node, e);
-        }
+        if (ellipse.Tag is Node node) NodeClicked(node, e);
     }
 
     private void NodeClicked(Node node, MouseButtonEventArgs e)
@@ -186,19 +183,13 @@ internal class Network
             {
                 // Unset old start node
                 StartNode.IsStartNode = false;
-                foreach (var startNodeLink in StartNode.Links)
-                {
-                    startNodeLink.IsInTree = false;
-                }
+                foreach (var startNodeLink in StartNode.Links) startNodeLink.IsInTree = false;
             }
 
             // Set new start node
             StartNode = node;
             StartNode.IsStartNode = true;
-            foreach (var startNodeLink in StartNode.Links)
-            {
-                startNodeLink.IsInTree = true;
-            }
+            foreach (var startNodeLink in StartNode.Links) startNodeLink.IsInTree = true;
         }
 
         if (e.RightButton == MouseButtonState.Pressed)
@@ -207,19 +198,31 @@ internal class Network
             {
                 // Unset old end node
                 EndNode.IsEndNode = false;
-                foreach (var endNodeLink in EndNode.Links)
-                {
-                    endNodeLink.IsInPath = false;
-                }
+                foreach (var endNodeLink in EndNode.Links) endNodeLink.IsInPath = false;
             }
 
             // Set new end node
             EndNode = node;
             EndNode.IsEndNode = true;
-            foreach (var endNodeLink in EndNode.Links)
-            {
-                endNodeLink.IsInPath = true;
-            }
+            foreach (var endNodeLink in EndNode.Links) endNodeLink.IsInPath = true;
         }
     }
+
+    private void CheckForPath()
+    {
+    }
+
+    internal enum AlgorithmTypes
+    {
+        LabelSetting,
+        LabelCorrecting
+    }
+
+    #region Properties
+
+    internal List<Link> Links { get; private set; }
+
+    internal List<Node> Nodes { get; private set; }
+
+    #endregion
 }

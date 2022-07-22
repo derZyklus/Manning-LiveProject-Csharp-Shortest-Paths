@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 
@@ -118,5 +119,10 @@ public partial class MainWindow : Window
 
         var cost21 = Math.Round(dist * (Rand.Next(100, 120) * 0.01));
         var link21 = new Link(network, node2, node1, cost21);
+    }
+
+    private void SelectAlgorithmComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        
     }
 }

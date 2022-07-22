@@ -22,6 +22,13 @@
                 <MenuItem Click="MenuItem_OnClick" Header="_Exit" />
             </MenuItem>
         </Menu>
+        <ToolBar DockPanel.Dock="Top">
+            <Label Content="Algorithm:"/>
+            <ComboBox x:Name="SelectAlgorithmComboBox" SelectedIndex="0" Width="120" SelectionChanged="SelectAlgorithmComboBox_OnSelectionChanged">
+                <ComboBoxItem Content="Label Setting"/>
+                <ComboBoxItem Content="Label Correcting"/>
+            </ComboBox>
+        </ToolBar>
         <Border BorderBrush="Black" BorderThickness="1" Margin="3">
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Auto">

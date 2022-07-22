@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -58,6 +57,12 @@ internal class Node
     internal Ellipse MyEllipse { get; private set; }
     internal Label MyLabel { get; private set; }
 
+    internal double TotalCost { get; set; }
+    internal bool IsInPath { get; set; }
+    internal bool Visited { get; set; }
+
+    internal Link ShortestPathLink { get; set; }
+
     public override string ToString()
     {
         return $"[{Text}]";
@@ -87,11 +92,9 @@ internal class Node
         }
     }
 
-
-
     private void SetNodeAppearance()
     {
-        if(MyEllipse == null)
+        if (MyEllipse == null)
             return;
         if (IsStartNode)
         {
@@ -99,7 +102,7 @@ internal class Node
             MyEllipse.Stroke = Brushes.Red;
             MyEllipse.StrokeThickness = 2;
         }
-        else if(IsEndNode)
+        else if (IsEndNode)
         {
             MyEllipse.Fill = Brushes.LightGreen;
             MyEllipse.Stroke = Brushes.Green;

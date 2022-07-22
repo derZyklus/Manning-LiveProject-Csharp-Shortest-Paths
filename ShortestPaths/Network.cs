@@ -183,13 +183,11 @@ internal class Network
             {
                 // Unset old start node
                 StartNode.IsStartNode = false;
-                foreach (var startNodeLink in StartNode.Links) startNodeLink.IsInTree = false;
             }
 
             // Set new start node
             StartNode = node;
             StartNode.IsStartNode = true;
-            foreach (var startNodeLink in StartNode.Links) startNodeLink.IsInTree = true;
         }
 
         if (e.RightButton == MouseButtonState.Pressed)
@@ -198,20 +196,62 @@ internal class Network
             {
                 // Unset old end node
                 EndNode.IsEndNode = false;
-                foreach (var endNodeLink in EndNode.Links) endNodeLink.IsInPath = false;
+
             }
 
             // Set new end node
             EndNode = node;
             EndNode.IsEndNode = true;
-            foreach (var endNodeLink in EndNode.Links) endNodeLink.IsInPath = true;
+
         }
+
+        CheckForPath();
     }
 
     private void CheckForPath()
     {
+        if (StartNode == null) return;
+
+        switch (AlgorithmType)
+        {
+            case AlgorithmTypes.LabelSetting:
+                FindPathTreeLabelSetting();
+                break;
+            case AlgorithmTypes.LabelCorrecting:
+                FindPathTreeLabelCorrecting();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        if (EndNode != null)
+        {
+            FindPath();
+        }
     }
 
+    private void FindPath(){}
+
+    private void FindPathTreeLabelSetting()
+    {
+        // Reset all nodes and links
+        foreach (var node in Nodes)
+        {
+            node.TotalCost = double.PositiveInfinity;
+            node.IsInPath = false;
+            node.ShortestPathLink = null;
+            node.Visited = false;
+        }
+
+        foreach (var link in Links)
+        {
+            link.IsInPath = false;
+            link.IsInTree = false;
+        }
+
+
+    }
+    private void FindPathTreeLabelCorrecting(){}
     internal enum AlgorithmTypes
     {
         LabelSetting,
